@@ -1,19 +1,21 @@
 AUTHORING: Wonder Akpabio CMSC 313 M/W 8:30AM (UMBC/class including time/date)
-PURPOSE OF SOFTWARE: The purpose of this software is to perform matrix arithmetic. Specifically, it solves the mathematical formula:
+PURPOSE OF SOFTWARE: The purpose of this software is to perform matrix arithmetic. For example, it solves the mathematical formula:
 D = A + (3 × B) × C^t, where C^t is the transpose of matrix C.
 FILES:
-  - matrixC.c: A C implementation that transposes matrix C, multiplies matrix B by 3, and then adds the product to matrix A.
+  - matrixC.c: A C implementation that transposes matrix ( C ), multiplies matrix ( B ) by 3, and then adds the product to matrix ( A ).
   - matrixCPP.cpp: A C++ implementation that performs the same operations as the C version.
 BUILD INSTRUCTIONS: 
 - Use a C/C++ Compiler such as g++
 - Compile Programs: 
-      matrixC.c: g++ -Wall matrixC.c -o matrixC
+      matrixC.c: gcc -Wall matrixC.c -o matrixC
       matrixCPP.cpp: g++ -Wall matrixCPP.cpp -o matrixCPP
 - Run Executables:
       ./matrixC
       ./matrixCPP
 TESTING METHODOLOGY: 
-      - The program is tested using hardcoded arrays for matrices A, B, and C.
-      - Outputs were compared tocalculated expected results.
-      - Program was tested on a Linux.
+      - For the C++ implementation, matrix objects were initialized in main.
+      - For the C implementation, arrays were created in main and tested through function calls.
+      - Outputs were compared to calculated expected results.
+      - The program was tested on Linux.
+
 
