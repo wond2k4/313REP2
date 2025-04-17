@@ -1,92 +1,114 @@
 #include <iostream>
 
-class MatrixFunctions {
-public:
-  // result = scalar * matrix
-  void mat2Multiplication(int result[][3], const int matrix[][3], int scalar, int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        result[i][j] = scalar * matrix[i][j];
-      }
-    }
-  }
-
-  // result = mat1 * mat2
-  void multiplyMatrices(int result[][2], const int mat1[][3], const int mat2[][2],
-                        int rows1, int cols1, int rows2) {
-    for (int i = 0; i < rows1; i++) {
-      for (int j = 0; j < 2; j++) {
-        result[i][j] = 0;   // initialize values
-        for (int k = 0; k < cols1; k++) {
-          result[i][j] += mat1[i][k] * mat2[k][j];
+class MatrixOperations {
+    public:
+        // free allocated memory
+        static void deleteMatrix (int** matrix, int rows){
+            for (int i = 0; i < rows; i++){
+                delete [] matrix[i];    
+            }
+            delete[] matrix;
         }
-      }
-    }
-  }
 
-  // result = mat1 + mat2
-  void addMatrices(int result[][2], const int mat1[][2], const int mat2[][2], int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        result[i][j] = mat1[i][j] + mat2[i][j];
-      }
-    }
-  }
+        // create a new matrix
+        static int** newMatrix (int rows, int cols){
+            int **newMatrix = new int*[rows];   // allocates array of integer pointers
+            for (int i = 0; i < rows; i++){
+                newMatrix[i] = new int[cols]();  // integer array is allocated for current row
+            }
+            return newMatrix;   // return the new matrix
+        }
 
-  // transpose a matrix
-  void transposeMatrix(int result[][2], const int matrix[][3], int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-      for (int j = 0; j < cols; j++) {
-        result[j][i] = matrix[i][j];
-      }
-    }
-  }
+        // perform scalar multiplication
+        static int** scalarMultiply(int** matrix, int rows, int cols, int scalar){
+            int **scaledMatrix = newMatrix(rows, cols); // matrix to store scaled result
+            for (int i = 0; i < rows; i++){
+                for (int j = 0; j < cols; j++){
+                    scaledMatrix[i][j] = scalar * matrix[i][j]; // multiply all elements by scalar
+                }
+            }
+            return scaledMatrix;
+        }
 
-  void printMatrix(const int result[][2], int rows, int cols) {
-    for (int i = 0; i < rows; i++) {
-      std::cout << "[ ";
-      for (int j = 0; j < cols; j++) {
-        std::cout << result[i][j] << " ";
-      }
-      std::cout << "]" << std::endl;
-    }
-  }
+        // transpose the matrix
+        static int ** transposeMatrix(int** matrix, int rows, int cols){
+            int** transposedMatrix = newMatrix(cols, rows);
+            for (int i = 0; i < rows; i++){
+                for (int j = 0; j < cols; j++){
+                    transposedMatrix[j][i] = matrix[i][j];
+                }
+            }
+            return transposedMatrix;    // return pointer to matrix
+        }
+
+        // check whether multiplication is possible
+        static bool validMultiplication(int mat1cols, int mat2rows){
+            // for two matrices to be multiplied first matrix num columns must equal second columns num of rows
+            if (mat1cols != mat2rows){
+                std::cout << "These two matrices cannot be multiplied" << std::endl;
+                return false;   // invalid multiplication
+            }
+            return true;    // valid multiplication
+        }
+        
+        // multiply two matrices
+        static int** matrixMultiplication(int **matrix1, int** matrix2, int mat1rows, int mat1cols, int mat2rows, int mat2cols){
+            int** productMatrix = newMatrix(mat1rows, mat2cols);
+            if (validMultiplication(mat1cols, mat2rows)){
+                for (int i = 0; i < mat1rows; i++){
+                    for (int j = 0; j < mat2cols; j++){
+                        productMatrix[i][j] = 0;    // initialize all values to zero
+                        for (int k = 0; k < mat1cols; k++) {
+                            productMatrix[i][j] += matrix1[i][k] * matrix2[k][j];   // perform matrix multiplication
+                        }
+                    }
+                }
+            }
+            return productMatrix; // return pointer to matrix
+        }
+        
+        static int** addMatrices(int **matrix1, int** matrix2, int rows, int cols){
+            int** sumMatrix = newMatrix(rows, cols);    // new matrix containing summed values
+            for (int i = 0; i < rows; i++){
+                for (int j = 0; j < cols; j++){
+                    sumMatrix[i][j] = matrix1[i][j] + matrix2[i][j];    // add elements
+                }
+            }
+            return sumMatrix;
+        }
+
+        static void printMatrix(int** matrix, int rows, int cols){
+            for (int i = 0; i < rows; i++){
+                std::cout << "[ ";
+                for (int j = 0; j < cols; j++){
+                    std::cout << matrix[i][j] << ' ';
+                }
+                std::cout << " ]" << std::endl;
+            }
+        }
 };
 
-int main() {
-  MatrixFunctions matrixObj;
-
-  int A[2][2] = {
-    {6, 4},
-    {8, 3}
-  };
-  int B[2][3] = {
-    {1, 2, 3},
-    {4, 5, 6}
-  };
-  int C[2][3] = {
-    {2, 4, 6},
-    {1, 3, 5}
-  };
-
-  // Transpose C
-  int cTransposed[3][2];
-  matrixObj.transposeMatrix(cTransposed, C, 2, 3);
-
-  // 3 * B
-  int mat2Updated[2][3];
-  matrixObj.mat2Multiplication(mat2Updated, B, 3, 2, 3);
-
-  // mat2Updated * cTransposed
-  int product[2][2];
-  matrixObj.multiplyMatrices(product, mat2Updated, cTransposed, 2, 3, 3);
-
-  // A + product
-  int D[2][2];
-  matrixObj.addMatrices(D, A, product, 2, 2);
-
-  std::cout << "D = " << std::endl;
-  matrixObj.printMatrix(D, 2, 2);
-
-  return 0;
+int main(){
+    // test matrices
+    int** A = MatrixOperations::newMatrix(2, 2);
+    A[0][0] = 6; A[0][1] = 4;
+    A[1][0] = 8; A[1][1] = 3;
+    
+    int** B = MatrixOperations::newMatrix(2, 3);
+    B[0][0] = 1; B[0][1] = 2; B[0][2] = 3;
+    B[1][0] = 4; B[1][1] = 5; B[1][2] = 6;
+    
+    int** C = MatrixOperations::newMatrix(2, 3);
+    C[0][0] = 2; C[0][1] = 4; C[0][2] = 6;
+    C[1][0] = 1; C[1][1] = 3; C[1][2] = 5;
+    
+    // D = A + (3 * B) * (C^T)
+    int** cTransposed = MatrixOperations::transposeMatrix(C, 2, 3);
+    int** scaledB = MatrixOperations::scalarMultiply(B, 2, 3, 3);
+    int** product = MatrixOperations::matrixMultiplication(scaledB, cTransposed, 2, 3, 3, 2);
+    int** D = MatrixOperations::addMatrices(A, product, 2, 2);
+    
+    std::cout << "D = " << std::endl;
+    MatrixOperations::printMatrix(D, 2, 2); 
+    return 0;
 }
