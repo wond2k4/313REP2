@@ -5,7 +5,7 @@ FILES:
   - matrixC.c: A C implementation that transposes matrix ( C ), multiplies matrix ( B ) by 3, and then adds the product to matrix ( A ).
   - matrixCPP.cpp: A C++ implementation that performs the same operations as the C version.
 BUILD INSTRUCTIONS: 
-- Use a C/C++ Compiler such as g++
+- Use a C/C++ Compiler such as gcc
 - Compile Programs: 
       matrixC.c: gcc -std=c99 matrixC.c -o matrixC
       matrixCPP.cpp: gcc -x c++ -o matrixCPP.cpp -lstdc++
