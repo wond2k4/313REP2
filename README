@@ -7,7 +7,7 @@ FILES:
 BUILD INSTRUCTIONS: 
 - Use a C/C++ Compiler such as g++
 - Compile Programs: 
-      matrixC.c: gcc-std=c99 matrixC.c -o matrixC
+      matrixC.c: gcc -std=c99 matrixC.c -o matrixC
       matrixCPP.cpp: gcc -x c++ -o matrixCPP.cpp -lstdc++
 - Run Executables:
       ./matrixC
